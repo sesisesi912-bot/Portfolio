@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Govardhan Koppala | Urban Planning & GIS Analyst | Property Feasibility</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() {
+            emailjs.init("Vu8RIfEU0WQoOEBVL");
+        })();
+    </script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                    },
+                    colors: {
+                        gis: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#064e3b',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Custom GIS grid background */
+        .bg-grid-pattern {
+            background-size: 28px 28px;
+            background-image: 
+                linear-gradient(to right, rgba(226, 232, 240, 0.6) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(226, 232, 240, 0.6) 1px, transparent 1px);
+        }
+        
+        .bg-grid-pattern-subtle {
+            background-size: 20px 20px;
+            background-image: 
+                linear-gradient(to right, rgba(241, 245, 249, 0.8) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(241, 245, 249, 0.8) 1px, transparent 1px);
+        }
+
+        /* Large stroked outline typography matching screenshots */
+        .text-stroke-banner {
+            -webkit-text-stroke: 1.5px #1e293b;
+            color: transparent;
+        }
+
+        /* Dashed boundary animation */
+        @keyframes dash {
+            to {
+                stroke-dashoffset: -24;
+            }
+        }
+        .animate-dash {
+            stroke-dasharray: 6;
+            animation: dash 8s linear infinite;
+        }
+
+        /* Modal backdrop scrolllock */
+        body.modal-open {
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-gis-600 selection:text-white">
+
+    <!-- Sticky Navigation Header -->
+    <header class="sticky top-0 z-40 bg-slate-50/90 backdrop-blur-md border-b border-slate-200/80 transition-all">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            
+            <!-- Brand Logo / Status -->
+            <a href="#home" class="flex items-center gap-3 group">
+                <span class="w-2.5 h-2.5 rounded-full bg-gis-500 animate-pulse"></span>
+                <span class="font-bold text-slate-900 tracking-tight text-lg group-hover:text-gis-700 transition-colors">Govardhan Koppala</span>
+            </a>
+
+            <!-- Desktop Links -->
+            <nav class="hidden lg:flex items-center space-x-1 xl:space-x-2 text-sm font-medium text-slate-600">
+                <a href="#home" class="px-3 py-2 rounded-lg hover:text-slate-900 hover:bg-slate-200/50 transition-colors">Home</a>
+                <a href="#about" class="px-3 py-2 rounded-lg hover:text-slate-900 hover:bg-slate-200/50 transition-colors">About</a>
+                <a href="#experience" class="px-3 py-2 rounded-lg hover:text-slate-900 hover:bg-slate-200/50 transition-colors">Experience</a>
+                <a href="#skills" class="px-3 py-2 rounded-lg hover:text-slate-900 hover:bg-slate-200/50 transition-colors">Skills</a>
+                <a href="#services" class="px-3 py-2 rounded-lg hover:text-slate-900 hover:bg-slate-200/50 transition-colors">Services</a>
+                <a href="#sample-report" class="px-3 py-2 rounded-lg hover:text-slate-900 hover:bg-slate-200/50 transition-colors">Sample Report</a>
+                <a href="#education" class="px-3 py-2 rounded-lg hover:text-slate-900 hover:bg-slate-200/50 transition-colors">Education</a>
+                <a href="#contact" class="px-3 py-2 rounded-lg hover:text-slate-900 hover:bg-slate-200/50 transition-colors">Contact</a>
+            </nav>
+
+            <!-- Navigation CTA & Small Top-Right Profile Circle -->
+            <div class="flex items-center gap-3">
+                <a href="#contact" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-slate-900 text-white text-sm font-semibold hover:bg-gis-700 transition-all shadow-sm">
+                    <span>Raise a request Feasibility Review</span>
+                    <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                </a>
+
+                <!-- Small Profile Pic Circle at Top Right (Clickable) -->
+                <div class="relative flex-shrink-0 group">
+                    <button onclick="openAvatarModal()" aria-label="View Profile Picture" class="focus:outline-none block">
+                        <img src="https://i.postimg.cc/vZRKQ7Fg/1.png" alt="Govardhan Koppala" class="w-10 h-10 rounded-full object-cover ring-2 ring-slate-200 shadow-sm cursor-pointer hover:ring-gis-500 transition-all transform hover:scale-105">
+                        <span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-gis-500 border-2 border-white rounded-full"></span>
+                    </button>
+                </div>
+
+                <button id="mobile-menu-btn" class="lg:hidden p-2 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-100" aria-label="Toggle Navigation">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Drawer -->
+        <div id="mobile-menu" class="hidden lg:hidden border-b border-slate-200 bg-white px-4 pt-2 pb-6 space-y-2 text-sm font-medium">
+            <a href="#home" class="block py-2 px-3 rounded-lg hover:bg-slate-100">Home</a>
+            <a href="#about" class="block py-2 px-3 rounded-lg hover:bg-slate-100">About</a>
+            <a href="#experience" class="block py-2 px-3 rounded-lg hover:bg-slate-100">Experience</a>
+            <a href="#skills" class="block py-2 px-3 rounded-lg hover:bg-slate-100">Skills</a>
+            <a href="#services" class="block py-2 px-3 rounded-lg hover:bg-slate-100">Services</a>
+            <a href="#sample-report" class="block py-2 px-3 rounded-lg hover:bg-slate-100">Sample Report</a>
+            <a href="#education" class="block py-2 px-3 rounded-lg hover:bg-slate-100">Education</a>
+            <a href="#contact" class="block py-2 px-3 rounded-lg hover:bg-slate-100">Contact</a>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section id="home" class="relative bg-grid-pattern pt-8 pb-16 lg:pt-12 lg:pb-24 border-b border-slate-200/80 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- Large Display Banner Matching Screenshot -->
+            <div class="select-none text-center sm:text-left mb-6 overflow-hidden">
+                <div class="text-stroke-banner font-extrabold text-5xl sm:text-8xl lg:text-[110px] tracking-tight leading-none uppercase">
+                    GOVARDHAN
+                </div>
+                <div class="text-slate-900 font-extrabold text-5xl sm:text-8xl lg:text-[110px] tracking-tight leading-none uppercase -mt-2 sm:-mt-6">
+                    KOPPALA
+                </div>
+            </div>
+
+            <!-- Main Content Grid -->
+            <div class="grid lg:grid-cols-12 gap-8 items-start pt-4">
+                
+                <!-- Left Bio Text -->
+                <div class="lg:col-span-7 space-y-5">
+                    <div>
+                        <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                            Urban Planning & GIS Analyst
+                        </h1>
+                        <p class="font-mono text-xs sm:text-sm font-semibold text-gis-700 mt-2 tracking-wide">
+                            Zoning Research • GIS Analysis • Planning Regulations • Property Feasibility
+                        </p>
+                    </div>
+
+                    <!-- Added Status Statement -->
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-gis-50 border border-gis-200 text-gis-900 text-xs sm:text-sm font-semibold shadow-sm">
+                        <span class="w-2 h-2 rounded-full bg-gis-500 animate-pulse"></span>
+                        <span>Currently open to full-time roles while continuing selective freelance collaborations</span>
+                    </div>
+
+                    <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                        Civil Engineering graduate with professional experience in zoning research, urban planning, GIS, planning regulations, data validation, and client support across the <strong class="text-slate-800">United States, Australia, and New Zealand</strong>.
+                    </p>
+
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        I combine planning, GIS, and data validation to research planning requirements and support preliminary property and site feasibility assessments.
+                    </p>
+
+                    <div class="flex flex-wrap gap-3 pt-2">
+                        <a href="#contact" class="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-slate-900 text-white font-semibold text-sm hover:bg-gis-700 transition-all shadow-sm">
+                            <span>Raise a request</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                        <a href="#services" class="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-white border border-slate-300 text-slate-800 font-semibold text-sm hover:bg-slate-100 transition-all shadow-sm">
+                            <span>Property Feasibility Services</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right: GIS Spatial Preview Card with Clickable Circular Avatar -->
+                <div class="lg:col-span-5 space-y-4">
+                    <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm bg-grid-pattern-subtle">
+                        
+                        <!-- Clickable Profile Header Badge inside Card -->
+                        <div class="flex items-center gap-3 pb-4 mb-4 border-b border-slate-100">
+                            <button onclick="openAvatarModal()" class="relative flex-shrink-0 focus:outline-none group">
+                                <img src="https://i.postimg.cc/vZRKQ7Fg/1.png" alt="Govardhan Koppala" class="w-12 h-12 rounded-full object-cover ring-2 ring-gis-500 shadow-sm group-hover:scale-105 transition-all">
+                            </button>
+                            <div>
+                                <span class="font-bold text-slate-900 text-sm block">Govardhan Koppala</span>
+                                <span class="text-xs text-slate-500 font-mono">Click picture to view</span>
+                            </div>
+                        </div>
+
+                        <!-- Simulated GIS Parcel SVG -->
+                        <div class="relative w-full h-44 bg-slate-50 border border-slate-200 rounded-2xl p-4 flex items-center justify-center overflow-hidden">
+                            <svg class="w-full h-full" viewBox="0 0 300 180" fill="none">
+                                <!-- Parcel Outer Contour -->
+                                <polygon points="30,20 270,10 280,140 20,160" fill="rgba(16, 185, 129, 0.05)" stroke="#10b981" stroke-width="2"/>
+                                <!-- Setback Inner Boundary -->
+                                <polygon points="50,38 250,30 258,125 40,140" fill="none" stroke="#059669" stroke-width="1.5" class="animate-dash"/>
+                                <!-- Proposed Footprint -->
+                                <rect x="100" y="65" width="80" height="45" fill="#1e293b" rx="4" />
+                                <circle cx="140" cy="87.5" r="4" fill="#10b981" />
+                                
+                                <text x="60" y="32" fill="#047857" font-family="monospace" font-size="10" font-weight="bold">SETBACK 6.0m</text>
+                                <text x="210" y="152" fill="#047857" font-family="monospace" font-size="10" font-weight="bold">LOT 742 m²</text>
+                            </svg>
+                        </div>
+
+                        <!-- Parcel Attribute Badges -->
+                        <div class="grid grid-cols-3 gap-2 mt-4 text-center">
+                            <div class="p-2.5 rounded-xl bg-slate-100/80 border border-slate-200">
+                                <span class="block text-[10px] font-mono text-slate-500 uppercase">Zoning</span>
+                                <span class="text-sm font-bold text-slate-900 font-mono">R-1</span>
+                            </div>
+                            <div class="p-2.5 rounded-xl bg-slate-100/80 border border-slate-200">
+                                <span class="block text-[10px] font-mono text-slate-500 uppercase">Height</span>
+                                <span class="text-sm font-bold text-slate-900 font-mono">9.0m</span>
+                            </div>
+                            <div class="p-2.5 rounded-xl bg-slate-100/80 border border-slate-200">
+                                <span class="block text-[10px] font-mono text-slate-500 uppercase">FSR</span>
+                                <span class="text-sm font-bold text-slate-900 font-mono">0.5:1</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Global Reach Badge -->
+                    <div class="p-4 rounded-2xl bg-slate-100/70 border border-slate-200/80 flex items-center gap-3 text-xs text-slate-600 font-medium">
+                        <i data-lucide="globe" class="w-4 h-4 text-gis-600 flex-shrink-0"></i>
+                        <span>Based in India • Working with US, Australia & New Zealand planning contexts</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT SECTION -->
+    <section id="about" class="py-16 sm:py-20 bg-white border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="flex items-center gap-2 font-mono text-xs font-semibold text-gis-700 tracking-wider uppercase mb-2">
+                <span>01</span>
+                <span>/</span>
+                <span>ABOUT</span>
+            </div>
+
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-10">
+                About Me
+            </h2>
+
+            <div class="grid lg:grid-cols-12 gap-10 items-start">
+                
+                <!-- Left Narrative Text -->
+                <div class="lg:col-span-7 space-y-5 text-slate-600 leading-relaxed text-base">
+                    <p>
+                        I’m a Civil Engineering graduate who moved into urban planning, zoning research, GIS, and planning technology.
+                    </p>
+                    <p>
+                        I research and interpret zoning regulations, planning schemes, development regulations, overlays, development standards, and property-level planning requirements.
+                    </p>
+                    <p>
+                        Through my previous professional experience across Australia, the United States, and New Zealand, I’ve translated planning regulations into structured rules that support automated planning and feasibility workflows.
+                    </p>
+
+                    <div class="p-4 rounded-2xl bg-gis-50 border border-gis-200 text-gis-900 font-mono text-sm font-semibold inline-block mt-2">
+                        Planning + GIS + Data + Technology
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-200 space-y-3">
+                        <h3 class="text-slate-900 font-bold text-sm tracking-tight uppercase font-mono">
+                            Freelance Positioning & Approach
+                        </h3>
+                        <p class="text-sm text-slate-600">
+                            My previous professional experience gave me exposure to both planning research and technology-driven feasibility workflows. I have worked with structured planning rules, GIS data, automated/rule-based systems, and property feasibility processes.
+                        </p>
+                        <p class="text-sm text-slate-600">
+                            I am now starting my independent freelance career, where I take a dedicated approach: <strong>each property feasibility report is manually researched and prepared by me</strong> based on the individual property location, official planning frameworks, and specific client requirements.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Right Highlight Cards Grid -->
+                <div class="lg:col-span-5 grid sm:grid-cols-2 gap-4">
+                    
+                    <!-- Card 1 -->
+                    <div class="p-6 rounded-3xl bg-slate-50 border border-slate-200 flex flex-col justify-between hover:border-slate-300 transition-all">
+                        <div>
+                            <span class="font-extrabold text-3xl sm:text-4xl text-slate-900 tracking-tight block">1+ Year</span>
+                            <span class="text-sm font-semibold text-slate-700 mt-2 block">Professional Planning & GIS Experience</span>
+                        </div>
+                        <i data-lucide="briefcase" class="w-6 h-6 text-gis-600 mt-6"></i>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="p-6 rounded-3xl bg-slate-50 border border-slate-200 flex flex-col justify-between hover:border-slate-300 transition-all">
+                        <div>
+                            <span class="font-extrabold text-3xl sm:text-4xl text-slate-900 tracking-tight block">3 Markets</span>
+                            <span class="text-sm font-semibold text-slate-700 mt-2 block">USA • Australia • New Zealand</span>
+                        </div>
+                        <i data-lucide="map" class="w-6 h-6 text-gis-600 mt-6"></i>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="p-6 rounded-3xl bg-slate-50 border border-slate-200 flex flex-col justify-between hover:border-slate-300 transition-all">
+                        <div>
+                            <span class="font-extrabold text-3xl sm:text-4xl text-slate-900 tracking-tight block">GIS</span>
+                            <span class="text-sm font-semibold text-slate-700 mt-2 block">Spatial Data & Mapping</span>
+                        </div>
+                        <i data-lucide="layers" class="w-6 h-6 text-gis-600 mt-6"></i>
+                    </div>
+
+                    <!-- Card 4 -->
+                    <div class="p-6 rounded-3xl bg-slate-50 border border-slate-200 flex flex-col justify-between hover:border-slate-300 transition-all">
+                        <div>
+                            <span class="font-extrabold text-3xl sm:text-4xl text-slate-900 tracking-tight block">PropTech</span>
+                            <span class="text-sm font-semibold text-slate-700 mt-2 block">Planning Automation & Feasibility</span>
+                        </div>
+                        <i data-lucide="cpu" class="w-6 h-6 text-gis-600 mt-6"></i>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- EXPERIENCE SECTION -->
+    <section id="experience" class="py-16 sm:py-20 bg-slate-50 border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="flex items-center gap-2 font-mono text-xs font-semibold text-gis-700 tracking-wider uppercase mb-2">
+                <span>02</span>
+                <span>/</span>
+                <span>EXPERIENCE</span>
+            </div>
+
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-12">
+                Professional Experience
+            </h2>
+
+            <!-- Experience Timeline Grid -->
+            <div class="space-y-8 relative before:absolute before:inset-0 before:left-4 sm:before:left-6 before:w-0.5 before:bg-slate-200">
+                
+                <!-- Role 1: Canibuild Analyst -->
+                <div class="relative pl-10 sm:pl-14">
+                    <div class="absolute left-1 sm:left-3 top-1.5 w-6 h-6 rounded-full bg-white border-2 border-gis-600 flex items-center justify-center">
+                        <span class="w-2 h-2 rounded-full bg-gis-600"></span>
+                    </div>
+
+                    <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+                            <div>
+                                <span class="font-mono text-xs font-semibold text-slate-400 uppercase">Mar 2026 – Sep 2026</span>
+                                <h3 class="text-xl font-extrabold text-slate-900 mt-1">Urban Planner & GIS Analyst</h3>
+                                <p class="text-sm font-medium text-slate-600">
+                                    Canibuild Technologies India Pvt. Ltd. • <span class="text-gis-700 font-semibold">USA • Australia • New Zealand</span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Key Responsibilities Checklist Grid -->
+                        <div class="grid sm:grid-cols-2 gap-3 pt-2 text-sm text-slate-700">
+                            <div class="flex items-start gap-2.5">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-gis-600 mt-0.5 flex-shrink-0"></i>
+                                <span>Cross-jurisdictional zoning and planning research</span>
+                            </div>
+                            <div class="flex items-start gap-2.5">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-gis-600 mt-0.5 flex-shrink-0"></i>
+                                <span>Regulatory interpretation</span>
+                            </div>
+                            <div class="flex items-start gap-2.5">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-gis-600 mt-0.5 flex-shrink-0"></i>
+                                <span>Planning rule digitalization</span>
+                            </div>
+                            <div class="flex items-start gap-2.5">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-gis-600 mt-0.5 flex-shrink-0"></i>
+                                <span>GIS spatial data extraction and digitization</span>
+                            </div>
+                            <div class="flex items-start gap-2.5">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-gis-600 mt-0.5 flex-shrink-0"></i>
+                                <span>Planning data modelling and validation</span>
+                            </div>
+                            <div class="flex items-start gap-2.5">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-gis-600 mt-0.5 flex-shrink-0"></i>
+                                <span>UAT and regression testing</span>
+                            </div>
+                            <div class="flex items-start gap-2.5">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-gis-600 mt-0.5 flex-shrink-0"></i>
+                                <span>Feasibility and quality assurance</span>
+                            </div>
+                            <div class="flex items-start gap-2.5">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-gis-600 mt-0.5 flex-shrink-0"></i>
+                                <span>Client support and technical issue management</span>
+                            </div>
+                            <div class="flex items-start gap-2.5 sm:col-span-2">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-gis-600 mt-0.5 flex-shrink-0"></i>
+                                <span>Coordination with Product and Engineering teams</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Role 2: Canibuild Intern -->
+                <div class="relative pl-10 sm:pl-14">
+                    <div class="absolute left-1 sm:left-3 top-1.5 w-6 h-6 rounded-full bg-white border-2 border-slate-300 flex items-center justify-center">
+                        <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+                    </div>
+
+                    <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                            <div>
+                                <span class="font-mono text-xs font-semibold text-slate-400 uppercase">Jul 2025 – Feb 2026</span>
+                                <h3 class="text-lg font-bold text-slate-900">Urban Planning / GIS Intern</h3>
+                                <p class="text-sm font-medium text-slate-600">Canibuild Technologies India Pvt. Ltd.</p>
+                            </div>
+                        </div>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            Supported zoning research, planning requirement structuring, GIS spatial data extraction, rule testing, client ticket management, and query resolution for international planning schemes.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Role 3: Altitud GIS Intern -->
+                <div class="relative pl-10 sm:pl-14">
+                    <div class="absolute left-1 sm:left-3 top-1.5 w-6 h-6 rounded-full bg-white border-2 border-slate-300 flex items-center justify-center">
+                        <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+                    </div>
+
+                    <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                            <div>
+                                <span class="font-mono text-xs font-semibold text-slate-400 uppercase">Apr 2025 – Jul 2025</span>
+                                <h3 class="text-lg font-bold text-slate-900">GIS Intern</h3>
+                                <p class="text-sm font-medium text-slate-600">Altitud — Hyderabad, India</p>
+                            </div>
+                        </div>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            Executed utility infrastructure GIS datasets cleaning, transmitter & distribution line mapping, spatial attribution, quality control checks, and infrastructure dataset management.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Case Study Box: Altadena, CA -->
+            <div class="mt-12 bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-xs font-mono font-semibold text-slate-700 mb-4">
+                    <span>Professional Experience | Canibuild Case Study</span>
+                </div>
+                <h3 class="text-xl font-extrabold text-slate-900">Altadena, California — Zoning & Property Feasibility Research</h3>
+                <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+                    Contributed to the research and interpretation of Los Angeles County zoning and development regulations relevant to property-level feasibility and post-wildfire rebuilding workflows in Altadena, California.
+                </p>
+                <div class="mt-4 pt-4 border-t border-slate-100 text-xs text-slate-500 italic">
+                    Note: Proprietary company materials, internal platform rules, and non-public datasets are strictly excluded to respect corporate non-disclosure requirements.
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SKILLS DASHBOARD SECTION -->
+    <section id="skills" class="py-16 sm:py-20 bg-white border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="flex items-center gap-2 font-mono text-xs font-semibold text-gis-700 tracking-wider uppercase mb-2">
+                <span>03</span>
+                <span>/</span>
+                <span>SKILLS</span>
+            </div>
+
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-12">
+                Skills Dashboard
+            </h2>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <!-- Layer 01: Planning & Zoning -->
+                <div class="p-6 rounded-3xl bg-slate-50 border border-slate-200 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <i data-lucide="building-2" class="w-6 h-6 text-gis-600"></i>
+                            <span class="font-mono text-xs text-slate-400">LAYER 01 • 6</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900 mb-4">Planning & Zoning</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700">Zoning Research</span>
+                            <span class="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700">Planning Schemes</span>
+                            <span class="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700">Development Regulations</span>
+                            <span class="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700">Overlay Research</span>
+                            <span class="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700">Feasibility Analysis</span>
+                            <span class="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700">Regulatory Interpretation</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Layer 02: GIS & Mapping -->
+                <div class="p-6 rounded-3xl bg-slate-50 border border-slate-200 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <i data-lucide="map" class="w-6 h-6 text-gis-600"></i>
+                            <span class="font-mono text-xs text-slate-400">LAYER 02 • 5</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900 mb-4">GIS & Mapping</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700">QGIS</span>
+                            <span class="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700">Google Maps</span>
+                            <span class="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700">GIS Data Digitization</span>
+                            <span class="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700">Spatial Data Analysis</span>
+                            <span class="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700">Georeferencing</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Layer 03: Data & Validation -->
+                <div class="p-6 rounded-3xl bg-slate-50 border border-slate-200 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <i data-lucide="database" class="w-6 h-6 text-gis-600"></i>
+                            <span class="font-mono text-xs text-slate-400">LAYER 03 • 5</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900 mb-4">Data & Validation</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700">Microsoft Excel</span>
+                            <span class="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700">Data Validation</span>
+                            <span class="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700">Attribute Analysis</span>
+                            <span class="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700">Rule Validation</span>
+                            <span class="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700">Planning Data Modelling</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Layer 04: Platform & Workflow -->
+                <div class="p-6 rounded-3xl bg-slate-50 border border-slate-200 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <i data-lucide="workflow" class="w-6 h-6 text-gis-600"></i>
+                            <span class="font-mono text-xs text-slate-400">LAYER 04 • 5</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900 mb-4">Platform & Workflow</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700">Canibuild Map Env</span>
+                            <span class="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700">HubSpot</span>
+                            <span class="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700">Jira</span>
+                            <span class="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700">UAT Testing</span>
+                            <span class="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700">Regression Testing</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Layer 05: Core Strengths -->
+                <div class="p-6 rounded-3xl bg-slate-50 border border-slate-200 flex flex-col justify-between md:col-span-2 lg:col-span-2">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <i data-lucide="sparkles" class="w-6 h-6 text-gis-600"></i>
+                            <span class="font-mono text-xs text-slate-400">LAYER 05 • 6</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900 mb-4">Core Strengths</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-800">Planning Research</span>
+                            <span class="px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-800">Spatial Reasoning</span>
+                            <span class="px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-800">Data Accuracy</span>
+                            <span class="px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-800">Problem Solving</span>
+                            <span class="px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-800">Client Support</span>
+                            <span class="px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-800">Cross-Team Collaboration</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SERVICES SECTION -->
+    <section id="services" class="py-16 sm:py-20 bg-slate-50 border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="flex items-center gap-2 font-mono text-xs font-semibold text-gis-700 tracking-wider uppercase mb-2">
+                <span>04</span>
+                <span>/</span>
+                <span>FREELANCE SERVICES</span>
+            </div>
+
+            <div class="mb-10">
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                    Property-Specific Feasibility Research
+                </h2>
+                <p class="text-slate-600 text-base mt-2 max-w-3xl">
+                    I independently research planning and zoning requirements for individual properties and prepare preliminary feasibility reports using official government/council sources, GIS analysis, and property-specific planning research.
+                </p>
+
+                <!-- Process Pill Badges -->
+                <div class="flex flex-wrap gap-2 mt-4">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-slate-200 text-xs font-medium text-slate-700">
+                        <span class="w-2 h-2 rounded-full bg-gis-500"></span> Solo consultant
+                    </span>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-slate-200 text-xs font-medium text-slate-700">
+                        <span class="w-2 h-2 rounded-full bg-gis-500"></span> Manually researched
+                    </span>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-slate-200 text-xs font-medium text-slate-700">
+                        <span class="w-2 h-2 rounded-full bg-gis-500"></span> Independently prepared
+                    </span>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-slate-200 text-xs font-medium text-slate-700">
+                        <span class="w-2 h-2 rounded-full bg-gis-500"></span> Human-led
+                    </span>
+                </div>
+            </div>
+
+            <!-- Workflow Pipeline Block -->
+            <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm mb-12">
+                <div class="font-mono text-xs font-bold text-gis-700 uppercase tracking-wider mb-1">
+                    HOW A REPORT IS MADE
+                </div>
+                <h3 class="text-xl font-extrabold text-slate-900 mb-6">
+                    From your address to a completed report
+                </h3>
+
+                <!-- 7-Step Horizontal Pipeline Grid -->
+                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 text-center">
+                    
+                    <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col justify-between">
+                        <span class="font-mono text-xs font-bold text-slate-400">01</span>
+                        <p class="text-xs font-semibold text-slate-800 mt-2">Client Provides Property / Address</p>
+                    </div>
+
+                    <div class="p-3.5 rounded-2xl bg-gis-50 border border-gis-300 flex flex-col justify-between">
+                        <span class="font-mono text-xs font-bold text-gis-700">02</span>
+                        <p class="text-xs font-bold text-gis-900 mt-2">I Manually Research the Property</p>
+                    </div>
+
+                    <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col justify-between">
+                        <span class="font-mono text-xs font-bold text-slate-400">03</span>
+                        <p class="text-xs font-semibold text-slate-800 mt-2">Review Official Planning Sources</p>
+                    </div>
+
+                    <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col justify-between">
+                        <span class="font-mono text-xs font-bold text-slate-400">04</span>
+                        <p class="text-xs font-semibold text-slate-800 mt-2">GIS / Spatial Analysis</p>
+                    </div>
+
+                    <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col justify-between">
+                        <span class="font-mono text-xs font-bold text-slate-400">05</span>
+                        <p class="text-xs font-semibold text-slate-800 mt-2">Assess Relevant Development Controls</p>
+                    </div>
+
+                    <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col justify-between">
+                        <span class="font-mono text-xs font-bold text-slate-400">06</span>
+                        <p class="text-xs font-semibold text-slate-800 mt-2">Prepare Property-Specific Report</p>
+                    </div>
+
+                    <div class="p-3.5 rounded-2xl bg-gis-50 border border-gis-300 flex flex-col justify-between col-span-2 sm:col-span-1">
+                        <span class="font-mono text-xs font-bold text-gis-700">07</span>
+                        <p class="text-xs font-bold text-gis-900 mt-2">Deliver Completed Feasibility Report</p>
+                    </div>
+
+                </div>
+
+                <p class="text-xs font-mono text-slate-500 mt-4 text-center">
+                    Each report is researched and prepared individually based on the specific property, proposed development and official council controls.
+                </p>
+            </div>
+
+            <!-- Service Offering Cards Grid -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <div class="p-6 rounded-3xl bg-white border border-slate-200 shadow-sm">
+                    <div class="w-10 h-10 rounded-2xl bg-gis-50 border border-gis-200 text-gis-700 flex items-center justify-center mb-4">
+                        <i data-lucide="home" class="w-5 h-5"></i>
+                    </div>
+                    <h4 class="text-lg font-extrabold text-slate-900 mb-2">Single-Family Dwelling Feasibility</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        Research applicable zoning controls, setbacks, height restrictions, lot coverage, and site considerations for single-dwelling construction.
+                    </p>
+                </div>
+
+                <div class="p-6 rounded-3xl bg-white border border-slate-200 shadow-sm">
+                    <div class="w-10 h-10 rounded-2xl bg-gis-50 border border-gis-200 text-gis-700 flex items-center justify-center mb-4">
+                        <i data-lucide="layout-grid" class="w-5 h-5"></i>
+                    </div>
+                    <h4 class="text-lg font-extrabold text-slate-900 mb-2">ADU / Granny Flat Feasibility</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        Review eligibility, size limits, setbacks, parking mandates, and overlay restrictions for secondary dwelling additions.
+                    </p>
+                </div>
+
+                <div class="p-6 rounded-3xl bg-white border border-slate-200 shadow-sm">
+                    <div class="w-10 h-10 rounded-2xl bg-gis-50 border border-gis-200 text-gis-700 flex items-center justify-center mb-4">
+                        <i data-lucide="box" class="w-5 h-5"></i>
+                    </div>
+                    <h4 class="text-lg font-extrabold text-slate-900 mb-2">Accessory Structure Review</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        Preliminary research for pools, sheds, detached garages, carports, and backyard utility structures.
+                    </p>
+                </div>
+
+                <div class="p-6 rounded-3xl bg-white border border-slate-200 shadow-sm">
+                    <div class="w-10 h-10 rounded-2xl bg-gis-50 border border-gis-200 text-gis-700 flex items-center justify-center mb-4">
+                        <i data-lucide="file-text" class="w-5 h-5"></i>
+                    </div>
+                    <h4 class="text-lg font-extrabold text-slate-900 mb-2">Zoning & Planning Research</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        Identify planning schemes, local environmental plans (LEP), zoning codes, development overlays, and setback rules.
+                    </p>
+                </div>
+
+                <div class="p-6 rounded-3xl bg-white border border-slate-200 shadow-sm">
+                    <div class="w-10 h-10 rounded-2xl bg-gis-50 border border-gis-200 text-gis-700 flex items-center justify-center mb-4">
+                        <i data-lucide="map-pin" class="w-5 h-5"></i>
+                    </div>
+                    <h4 class="text-lg font-extrabold text-slate-900 mb-2">GIS & Property Analysis</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        Spatial inspection of parcel boundaries, contour lines, hazard overlays, and utility easements using GIS mapping tools.
+                    </p>
+                </div>
+
+                <div class="p-6 rounded-3xl bg-white border border-slate-200 shadow-sm">
+                    <div class="w-10 h-10 rounded-2xl bg-gis-50 border border-gis-200 text-gis-700 flex items-center justify-center mb-4">
+                        <i data-lucide="link" class="w-5 h-5"></i>
+                    </div>
+                    <h4 class="text-lg font-extrabold text-slate-900 mb-2">Official Regulation Citations</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        Every finding is cross-referenced with direct links to official local municipal codes, government planning portals, or council documentation.
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- Disclaimer Note -->
+            <div class="mt-8 p-4 rounded-2xl bg-slate-100/80 border border-slate-200 text-xs text-slate-500 leading-relaxed">
+                <strong>Important Service Notice:</strong> Reports provided are preliminary planning and property feasibility research intended for early decision-making support. Final statutory development approvals, land surveying, and formal architectural certifications remain subject to official council review and appropriately licensed local professionals.
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SAMPLE REPORT SECTION -->
+    <section id="sample-report" class="py-16 sm:py-20 bg-white border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="flex items-center gap-2 font-mono text-xs font-semibold text-gis-700 tracking-wider uppercase mb-2">
+                <span>05</span>
+                <span>/</span>
+                <span>INDEPENDENT WORK SAMPLE</span>
+            </div>
+
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+                <div>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                        Sample Property Feasibility Report
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-500 italic mt-2">
+                        Note: The address and associated rules provided in this document are entirely fictional and serve solely as a sample for demonstration purposes.
+                    </p>
+                    <p class="text-slate-600 text-base mt-2">
+                        Independently Researched & Prepared by Govardhan Koppala
+                    </p>
+                </div>
+
+                <button onclick="openReportModal()" class="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-slate-900 text-white font-semibold text-sm hover:bg-gis-700 transition-all shadow-sm">
+                    <i data-lucide="file-text" class="w-4 h-4"></i>
+                    <span>View Full Interactive Report</span>
+                </button>
+            </div>
+
+            <!-- Sample Report Interactive Cards Display -->
+            <div class="bg-slate-50 border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
+                
+                <!-- Report Header Pill -->
+                <div class="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-slate-200">
+                    <div>
+                        <span class="font-mono text-xs text-slate-400 block uppercase">Sample Property</span>
+                        <span class="text-lg font-extrabold text-slate-900">742 Evergreen Terrace, Altadena, CA 91001</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="px-3 py-1 rounded-full bg-gis-100 text-gis-800 font-mono text-xs font-bold">ZONING: R-1 (Single-Family)</span>
+                        <span class="px-3 py-1 rounded-full bg-slate-200 text-slate-800 font-mono text-xs font-bold">LOT: 7,420 SQ FT</span>
+                    </div>
+                </div>
+
+                <!-- 4 Report Aspect Cards -->
+                <div class="grid md:grid-cols-2 gap-6">
+                    
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5">
+                        <div class="flex items-center gap-2 font-bold text-slate-900 text-sm mb-3">
+                            <i data-lucide="shield-check" class="w-4 h-4 text-gis-600"></i>
+                            <span>Development Controls</span>
+                        </div>
+                        <ul class="text-xs text-slate-600 space-y-2 font-mono">
+                            <li>• Max Building Height: 28 ft (2-story limit)</li>
+                            <li>• Front Setback: 20 ft minimum</li>
+                            <li>• Side Setbacks: 5 ft interior / 10 ft street side</li>
+                            <li>• Rear Setback: 15 ft minimum</li>
+                            <li>• Max Lot Coverage: 40% primary dwelling</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5">
+                        <div class="flex items-center gap-2 font-bold text-slate-900 text-sm mb-3">
+                            <i data-lucide="home" class="w-4 h-4 text-gis-600"></i>
+                            <span>ADU / Granny Flat Feasibility</span>
+                        </div>
+                        <ul class="text-xs text-slate-600 space-y-2 font-mono">
+                            <li>• Detached ADU Permitted: Up to 1,200 sq ft max</li>
+                            <li>• Height Limit: 16 ft single story</li>
+                            <li>• Required Setbacks: 4 ft side and rear</li>
+                            <li>• Parking Exemption: Within 0.5 miles of transit stop</li>
+                            <li>• Separate Utility Connection Allowed</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5">
+                        <div class="flex items-center gap-2 font-bold text-slate-900 text-sm mb-3">
+                            <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-500"></i>
+                            <span>Overlays & Environmental Constraints</span>
+                        </div>
+                        <ul class="text-xs text-slate-600 space-y-2 font-mono">
+                            <li>• Fire Hazard Severity: Very High Fire Hazard Severity Zone (VHFHSZ)</li>
+                            <li>• Wildfire Mitigation Required: Ignition-resistant roofing & eaves</li>
+                            <li>• Slope / Topography: Standard flat parcel (&lt;5% slope)</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5">
+                        <div class="flex items-center gap-2 font-bold text-slate-900 text-sm mb-3">
+                            <i data-lucide="bookmark" class="w-4 h-4 text-gis-600"></i>
+                            <span>Official Source Verification</span>
+                        </div>
+                        <ul class="text-xs text-slate-600 space-y-2 font-mono">
+                            <li>• LA County Planning Code Title 22</li>
+                            <li>• CA State ADU Legislation (Gov. Code § 65852.2)</li>
+                            <li>• Regional GIS Boundary Layer 2026</li>
+                        </ul>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- EDUCATION SECTION -->
+    <section id="education" class="py-16 sm:py-20 bg-slate-50 border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="flex items-center gap-2 font-mono text-xs font-semibold text-gis-700 tracking-wider uppercase mb-2">
+                <span>06</span>
+                <span>/</span>
+                <span>EDUCATION</span>
+            </div>
+
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-12">
+                Education & Qualifications
+            </h2>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                
+                <!-- B.Tech -->
+                <div class="p-6 rounded-3xl bg-white border border-slate-200 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <span class="font-mono text-xs font-semibold text-gis-700 block">2023 GRADUATE</span>
+                        <h3 class="text-xl font-extrabold text-slate-900 mt-2">B.Tech in Civil Engineering</h3>
+                        <p class="text-sm font-medium text-slate-600 mt-1">Yogi Vemana University</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between font-mono text-xs">
+                        <span class="text-slate-400">CGPA</span>
+                        <span class="font-bold text-slate-900">7.5 / 10.0</span>
+                    </div>
+                </div>
+
+                <!-- Diploma -->
+                <div class="p-6 rounded-3xl bg-white border border-slate-200 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <span class="font-mono text-xs font-semibold text-slate-500 block">2020 GRADUATE</span>
+                        <h3 class="text-xl font-extrabold text-slate-900 mt-2">Diploma in Civil Engineering</h3>
+                        <p class="text-sm font-medium text-slate-600 mt-1">Government Polytechnic, Gudur</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between font-mono text-xs">
+                        <span class="text-slate-400">GRADE</span>
+                        <span class="font-bold text-slate-900">73%</span>
+                    </div>
+                </div>
+
+                <!-- SSC -->
+                <div class="p-6 rounded-3xl bg-white border border-slate-200 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <span class="font-mono text-xs font-semibold text-slate-500 block">2017 GRADUATE</span>
+                        <h3 class="text-xl font-extrabold text-slate-900 mt-2">Secondary School Certificate (SSC)</h3>
+                        <p class="text-sm font-medium text-slate-600 mt-1">Government High School, Rapur</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between font-mono text-xs">
+                        <span class="text-slate-400">CGPA</span>
+                        <span class="font-bold text-slate-900">7.8 / 10.0</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section id="contact" class="py-16 sm:py-24 bg-white border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-4xl mx-auto">
+                
+                <div class="text-center space-y-4 mb-12">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gis-50 border border-gis-200 text-gis-800 text-xs font-mono font-semibold">
+                        <span>AVAILABLE FOR FREELANCE RESEARCH</span>
+                    </div>
+                    <h2 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">
+                        Have a Property You'd Like to Review?
+                    </h2>
+                    <p class="text-slate-600 text-base sm:text-lg">
+                        I provide manually researched preliminary property and site feasibility reports for builders, construction companies, and property professionals.
+                    </p>
+                </div>
+
+                <!-- Contact Form Box -->
+                <div class="bg-slate-50 border border-slate-200 rounded-3xl p-6 sm:p-10 shadow-sm">
+                    <form id="inquiry-form" onsubmit="handleFormSubmit(event)" class="space-y-4">
+                        
+                        <div class="grid sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-mono font-bold text-slate-600 uppercase mb-1">Name</label>
+                                <input type="text" name="name" required placeholder="Name" class="w-full px-4 py-3 rounded-2xl bg-white border border-slate-200 text-sm focus:outline-none focus:border-gis-600 transition-colors">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-mono font-bold text-slate-600 uppercase mb-1">Company</label>
+                                <input type="text" name="company" placeholder="Company" class="w-full px-4 py-3 rounded-2xl bg-white border border-slate-200 text-sm focus:outline-none focus:border-gis-600 transition-colors">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-mono font-bold text-slate-600 uppercase mb-1">Email</label>
+                            <input type="email" name="email" required placeholder="Email" class="w-full px-4 py-3 rounded-2xl bg-white border border-slate-200 text-sm focus:outline-none focus:border-gis-600 transition-colors">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-mono font-bold text-slate-600 uppercase mb-1">Message</label>
+                            <textarea name="message" rows="4" placeholder="Message" class="w-full px-4 py-3 rounded-2xl bg-white border border-slate-200 text-sm focus:outline-none focus:border-gis-600 transition-colors"></textarea>
+                        </div>
+
+                        <button type="submit" id="submit-btn" class="w-full py-4 rounded-2xl bg-slate-900 text-white font-extrabold text-base hover:bg-gis-700 transition-all shadow-md flex items-center justify-center gap-2">
+                            <span>Send Inquiry</span>
+                            <i data-lucide="arrow-up-right" class="w-5 h-5"></i>
+                        </button>
+                    </form>
+
+                    <!-- Direct Contact Badges -->
+                    <div class="mt-8 pt-6 border-t border-slate-200 flex flex-wrap items-center justify-between gap-4 text-xs font-mono text-slate-600">
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="mail" class="w-4 h-4 text-gis-600"></i>
+                            <a href="mailto:sesisesi912@gmail.com" class="hover:text-slate-900 font-bold">sesisesi912@gmail.com</a>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="phone" class="w-4 h-4 text-gis-600"></i>
+                            <a href="tel:+918179368680" class="hover:text-slate-900 font-bold">+91 81793 68680</a>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="map-pin" class="w-4 h-4 text-gis-600"></i>
+                            <span>Nellore, Andhra Pradesh, India</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="py-12 bg-slate-50 text-slate-600 text-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div>
+                <span class="font-extrabold text-slate-900 block text-base">Govardhan Koppala</span>
+                <span class="text-xs text-slate-500 font-mono">Urban Planning • GIS • Property Feasibility</span>
+            </div>
+
+            <nav class="flex flex-wrap gap-4 text-xs font-medium text-slate-500">
+                <a href="#home" class="hover:text-slate-900">Home</a>
+                <a href="#about" class="hover:text-slate-900">About</a>
+                <a href="#experience" class="hover:text-slate-900">Experience</a>
+                <a href="#services" class="hover:text-slate-900">Services</a>
+                <a href="#sample-report" class="hover:text-slate-900">Sample Report</a>
+                <a href="#contact" class="hover:text-slate-900">Contact</a>
+            </nav>
+
+            <span class="text-xs font-mono text-slate-400">
+                © 2026 Govardhan Koppala
+            </span>
+        </div>
+    </footer>
+
+    <!-- PROFILE PICTURE EXPANDED CIRCULAR MODAL -->
+    <div id="avatar-modal" onclick="closeAvatarModal()" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-md flex flex-col items-center justify-center p-4 transition-all">
+        
+        <!-- Close Button -->
+        <button onclick="closeAvatarModal()" class="absolute top-6 right-6 p-3 rounded-full bg-white/10 text-white hover:bg-white/20 transition-all border border-white/20">
+            <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+
+        <!-- Circular Big Photo Container -->
+        <div class="relative flex flex-col items-center" onclick="event.stopPropagation()">
+            <div class="w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 rounded-full overflow-hidden border-4 border-gis-500 shadow-2xl ring-8 ring-white/10 flex items-center justify-center bg-slate-900">
+                <img src="https://i.postimg.cc/vZRKQ7Fg/1.png" alt="Govardhan Koppala" class="w-full h-full object-cover">
+            </div>
+
+            <!-- Profile Details Label -->
+            <div class="mt-6 text-center">
+                <h3 class="text-2xl font-extrabold text-white tracking-tight">Govardhan Koppala</h3>
+                <p class="text-sm font-mono text-gis-400 mt-1">Urban Planning & GIS Analyst</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SAMPLE REPORT MODAL -->
+    <div id="report-modal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+        <div class="bg-white border border-slate-200 rounded-3xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+            
+            <!-- Modal Header -->
+            <div class="p-6 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+                <div>
+                    <span class="font-mono text-xs font-bold text-gis-700 uppercase">Independent Sample Work</span>
+                    <h3 class="text-xl font-extrabold text-slate-900">Preliminary Property Feasibility Report</h3>
+                </div>
+                <button onclick="closeReportModal()" class="p-2 rounded-xl text-slate-400 hover:text-slate-800 hover:bg-slate-200">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+
+            <!-- Modal Content Body -->
+            <div class="p-6 sm:p-8 overflow-y-auto space-y-8 font-sans text-slate-700">
+                
+                <!-- Disclaimer Banner -->
+                <div class="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-xs text-amber-900">
+                    <strong>Portfolio Demonstration Notice:</strong> This sample report was independently researched and prepared by Govardhan Koppala using publicly available municipal planning information. It is intended for portfolio demonstration and early-stage decision support.
+                </div>
+
+                <!-- 1. Property Identification -->
+                <div>
+                    <h4 class="font-extrabold text-slate-900 text-lg mb-3 flex items-center gap-2">
+                        <span class="w-6 h-6 rounded-full bg-slate-900 text-white font-mono text-xs flex items-center justify-center">1</span>
+                        Property Overview
+                    </h4>
+                    <div class="grid sm:grid-cols-2 gap-3 text-sm bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                        <div><strong>Address:</strong> 742 Evergreen Terrace, Altadena, CA 91001</div>
+                        <div><strong>Jurisdiction:</strong> Los Angeles County (Unincorporated)</div>
+                        <div><strong>Zoning Code:</strong> R-1-10000 (Single-Family Residential)</div>
+                        <div><strong>Parcel Size:</strong> 7,420 sq ft (0.17 Acres)</div>
+                    </div>
+                </div>
+
+                <!-- 2. Development Controls Table -->
+                <div>
+                    <h4 class="font-extrabold text-slate-900 text-lg mb-3 flex items-center gap-2">
+                        <span class="w-6 h-6 rounded-full bg-slate-900 text-white font-mono text-xs flex items-center justify-center">2</span>
+                        Applicable Development Controls
+                    </h4>
+                    <div class="border border-slate-200 rounded-2xl overflow-hidden text-sm">
+                        <table class="w-full text-left border-collapse">
+                            <thead class="bg-slate-100 font-mono text-xs uppercase text-slate-600">
+                                <tr>
+                                    <th class="p-3 border-b">Parameter</th>
+                                    <th class="p-3 border-b">Standard Control</th>
+                                    <th class="p-3 border-b">Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-200 font-mono text-xs">
+                                <tr>
+                                    <td class="p-3 font-semibold">Front Setback</td>
+                                    <td class="p-3">20 ft</td>
+                                    <td class="p-3 text-slate-500">Aligns with prevailing neighborhood block pattern</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-semibold">Side Setbacks</td>
+                                    <td class="p-3">5 ft interior</td>
+                                    <td class="p-3 text-slate-500">10 ft for corner street side</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-semibold">Rear Setback</td>
+                                    <td class="p-3">15 ft</td>
+                                    <td class="p-3 text-slate-500">Increases to 20 ft for 2-story construction</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-semibold">Max Height</td>
+                                    <td class="p-3">28 ft / 2 stories</td>
+                                    <td class="p-3 text-slate-500">Measured from grade to ridge</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-semibold">Lot Coverage</td>
+                                    <td class="p-3">40% maximum</td>
+                                    <td class="p-3 text-slate-500">Includes primary structure and attached garage</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 3. ADU Provisions -->
+                <div>
+                    <h4 class="font-extrabold text-slate-900 text-lg mb-3 flex items-center gap-2">
+                        <span class="w-6 h-6 rounded-full bg-slate-900 text-white font-mono text-xs flex items-center justify-center">3</span>
+                        Accessory Dwelling Unit (ADU) Feasibility
+                    </h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        Under California State ADU law (AB 68 / SB 13) and LA County Planning regulations, the lot is eligible for one detached ADU up to 1,200 sq ft with maximum 16 ft height and reduced 4 ft rear/side setbacks. Parking is exempted due to proximity to public bus stop.
+                    </p>
+                </div>
+
+                <!-- 4. Verified Sources -->
+                <div>
+                    <h4 class="font-extrabold text-slate-900 text-lg mb-3 flex items-center gap-2">
+                        <span class="w-6 h-6 rounded-full bg-slate-900 text-white font-mono text-xs flex items-center justify-center">4</span>
+                        Official Planning Sources
+                    </h4>
+                    <ul class="text-xs font-mono space-y-1.5 text-gis-800">
+                        <li>• Los Angeles County Code - Title 22 Planning & Zoning (§ 22.18.030)</li>
+                        <li>• LA County Department of Regional Planning GIS Portal</li>
+                        <li>• California Department of Housing and Community Development ADU Guidelines</li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="p-4 border-t border-slate-200 bg-slate-50 flex justify-end">
+                <button onclick="closeReportModal()" class="px-5 py-2.5 rounded-xl bg-slate-900 text-white text-sm font-bold hover:bg-gis-700 transition-colors">
+                    Close Preview
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Mobile Navigation Drawer Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu on click
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // Profile Picture Circular Modal Logic
+        function openAvatarModal() {
+            document.getElementById('avatar-modal').classList.remove('hidden');
+            document.body.classList.add('modal-open');
+        }
+
+        function closeAvatarModal() {
+            document.getElementById('avatar-modal').classList.add('hidden');
+            document.body.classList.remove('modal-open');
+        }
+
+        // Sample Report Modal Logic
+        function openReportModal() {
+            document.getElementById('report-modal').classList.remove('hidden');
+            document.body.classList.add('modal-open');
+        }
+
+        function closeReportModal() {
+            document.getElementById('report-modal').classList.add('hidden');
+            document.body.classList.remove('modal-open');
+        }
+
+        // EmailJS Integration Form Handler
+        function handleFormSubmit(event) {
+            event.preventDefault();
+
+            const submitBtn = document.getElementById('submit-btn');
+            const originalBtnText = submitBtn.innerHTML;
+
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<span>Sending...</span>`;
+
+            // Send via EmailJS using Service ID and updated Template ID
+            emailjs.sendForm('service_q0k3gcg', 'template_nbmkiql', event.target)
+                .then(function() {
+                    alert('Thank you! Your inquiry has been sent successfully. Govardhan Koppala will get back to you shortly.');
+                    event.target.reset();
+                }, function(error) {
+                    alert('Failed to send the inquiry. Please try again or email directly at sesisesi912@gmail.com.');
+                    console.error('EmailJS Error:', error);
+                })
+                .finally(function() {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnText;
+                    lucide.createIcons();
+                });
+        }
+    </script>
+</body>
+</html>
